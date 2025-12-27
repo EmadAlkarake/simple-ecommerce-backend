@@ -7,11 +7,13 @@ import com.example.ecommerce.model.Product;
 import com.example.ecommerce.repository.OrderRepository;
 import com.example.ecommerce.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Service
 public class OrderService {
@@ -26,9 +28,10 @@ public class OrderService {
     }
 
     @Transactional
-    public Order placeOrder(Order order) {
+    @NonNull
+    public Order placeOrder(@NonNull Order order) {
         // 1. Validate if product exists
-        Product product = productRepository.findById(order.getProductId())
+        Product product = productRepository.findById(Objects.requireNonNull(order.getProductId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + order.getProductId()));
 
         // 2. Check if there is enough stock
@@ -44,6 +47,6 @@ public class OrderService {
         order.setTotalAmount(product.getPrice().multiply(new BigDecimal(order.getQuantity())));
         order.setOrderDate(LocalDateTime.now());
 
-        return orderRepository.save(order);
+        return Objects.requireNonNull(orderRepository.save(order));
     }
 }

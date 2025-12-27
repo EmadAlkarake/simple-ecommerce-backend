@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.lang.NonNull;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -23,7 +24,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Order> placeOrder(@Valid @RequestBody Order order) {
+    public ResponseEntity<Order> placeOrder(@Valid @RequestBody @NonNull Order order) {
         return new ResponseEntity<>(orderService.placeOrder(order), HttpStatus.CREATED);
     }
 }
